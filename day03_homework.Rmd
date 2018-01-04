@@ -1,0 +1,69 @@
+---
+title: "Day 3 Homework"
+output: html_document
+---
+
+1. Identify a column in your data that *should* be a factor (whether it is or not). Check to see whether R is already treating it as a factor, and if not, convert it into a factor.
+
+```{r}
+read.csv("treatment.csv")
+my.treatment <-read.csv("treatment.csv")
+summary(my.treatment)
+#yes, it is already treated as factor
+```
+
+2. What are the levels of the factor? How many occurrences of each level are there in the data?
+   
+```{r}
+levels(my.treatment$ethn)
+summary(my.treatment$ethn)
+```
+
+3. Create a new column that is a numeric "version" of the factor column, using `as.numeric()`. Use `xtabs()` to see how the values of these columns line up.
+
+```{r}
+ethn.new1 <- as.numeric(my.treatment$ethn)
+xtabs(~ethn + ethn.new1,my.treatment)
+
+```
+
+4. Create another column that is a copy of the factor column. Now, recode this new column so that the factor levels have new names. 
+  (e.g., if you have a factor with levels "A" and "B", you could make a new column that had "condition A" and "condition B" as the level names instead)
+
+```{r}
+ethn.new2 <- my.treatment$ethn
+ethn.new2
+levels(ethn.new2)<- c("ethn1","ethn2","ethn3")
+summary(ethn.new2)
+
+```
+
+5. Change the order of the levels in your new factor, using three different methods:
+  a. `relevel()`
+  b. `reorder()`
+  c. `factor()`
+
+```{r}
+ethn.new3 <- relevel(ethn.new2,"ethn2")
+summary(ethn.new3)
+
+ethn.new4 <- reorder(ethn.new1["ethn"],"re78")
+sumamry(ethn.new4)
+
+ethn.new5 <- factor(ethn.new2["ethn"], levels= c("ethn2","ethn3","ethn1"))
+summary(ethn.new5)
+```
+
+6. Missing values
+  a. Do you have any missing values (NA) in your data?
+  b. Are there any places where you *should* have missing values but they were read into R as some other value?
+  c. If the answer to (b) is "yes", figure out how to read in your data in a way that correctly identifies the missing value "code"
+  d. If you have any NAs in your data, describe why you think those values are missing. Does there appear to be any systematic relationship between missingness and other variables in your data?
+
+```{r}
+is.na(my.treatment)  #no
+# b. no
+
+
+```
+
