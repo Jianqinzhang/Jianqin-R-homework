@@ -1,0 +1,37 @@
+---
+title: "Day 4 Homework"
+output: html_document
+---
+
+1. Find some aspect of your data that needs to be combined or merged in some way.  This could be a variety of things:
+  - multiple "sheets" in an Excel
+  - multiple files that should be combined into one data set
+  - properties that need to be merged in to one data set. For example:
+    - you have a table of subject properties (gender, handedness, etc.) that need to be merged into the item-level data
+    - you have other information on countries (population, etc.) that need to be merged in
+  - if you DON'T have this naturally-occurring issue, figure out a way to manufacture it. For example:
+    - split up your data into chunks
+    - make up some new table of information that you want to merge in
+  - Explain (in words) what you are trying to do
+  - Use binding/merging commands to accomplish this
+  - Complete at least ONE example of binding and ONE example of merging
+
+```{r}
+my.data <- read.csv("treatment.csv")
+my.data1 <- droplevels(my.data[my.data$ethn == "black",])
+my.data1
+summary(my.data1)
+my.data2 <- droplevels(my.data[my.data$ethn == "hispanic",])
+my.data2
+my.data.reassembled <- rbind(my.data1, my.data2)
+my.data.reassembled1 <- bind_rows(my.data1,my.data2)
+
+
+merge1 <- data.frame(ID=1:10,married = c("TRUE","FALSE","FALSE","TRUE","FALSE","FALSE","TRUE", "FALSE", "TRUE","FALSE"))
+summary(merge1)
+merge2 <- data.frame(ID=1:10, gender = c("male","female","male","female","female","male","male","female","male","female"))
+summary(merge2)
+merge3 <- merge(x= merge1, y = merge2, by = "ID" )
+summary(merge3)
+head(merge3)
+```

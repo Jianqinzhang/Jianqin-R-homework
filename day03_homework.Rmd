@@ -10,6 +10,14 @@ read.csv("treatment.csv")
 my.treatment <-read.csv("treatment.csv")
 summary(my.treatment)
 #yes, it is already treated as factor
+#help read.csv, strings as factors=default(dangerous to change the option)
+#anything that is not numeric is converted to a factor
+#when a condition is coded as 1 or 2,r doesn't know it is a factor 
+#summary gives different results(dataframe, factor). It is a generic function.
+#different class systems under R inherited from s language: s3 simpler
+#help document does not necessarily give you all of that
+#summary(scottdata) sumamry(scottdata$Corpus) summary(example.lm)
+#class(scottdata)  class(scottdata$Corpus) class(example.lm)
 ```
 
 2. What are the levels of the factor? How many occurrences of each level are there in the data?
@@ -17,13 +25,16 @@ summary(my.treatment)
 ```{r}
 levels(my.treatment$ethn)
 summary(my.treatment$ethn)
+xtabs(~ethn,my.treatment)
+?xtabs
 ```
 
 3. Create a new column that is a numeric "version" of the factor column, using `as.numeric()`. Use `xtabs()` to see how the values of these columns line up.
 
 ```{r}
-ethn.new1 <- as.numeric(my.treatment$ethn)
-xtabs(~ethn + ethn.new1,my.treatment)
+my.treatment$ethn1 <- as.numeric(my.treatment$ethn)
+
+xtabs(~ethn + ethn1,my.treatment)
 
 ```
 
@@ -31,10 +42,17 @@ xtabs(~ethn + ethn.new1,my.treatment)
   (e.g., if you have a factor with levels "A" and "B", you could make a new column that had "condition A" and "condition B" as the level names instead)
 
 ```{r}
-ethn.new2 <- my.treatment$ethn
-ethn.new2
-levels(ethn.new2)<- c("ethn1","ethn2","ethn3")
-summary(ethn.new2)
+my.treatment$ethn2 <- my.treatment$ethn
+levels(my.treatment$ethn2)
+head(my.treatment)
+levels(my.treatment$ethn2)<- c("ethn1","ethn2","ethn3")
+#This looks like you are assigning one value to another.There is a separate funtion that enables this behavior. levels<-. there are a lot of functions like that. 
+colnames(scottdata) 
+colnames(scottdata)[2] 
+colnames(scottdata)[2] <- "Language System"
+colnames(scottdata)
+
+xtabs(~ethn + ethn2, my.treatment )
 
 ```
 
@@ -44,16 +62,17 @@ summary(ethn.new2)
   c. `factor()`
 
 ```{r}
-ethn.new3 <- relevel(ethn.new2,"ethn2")
-summary(ethn.new3)
+my.treatment$ethn3 <- relevel(my.treatment$ethn2,"ethn2")
+summary(my.treatment$ethn3)
 
-ethn.new4 <- reorder(ethn.new1["ethn"],"re78")
-sumamry(ethn.new4)
+my.treatment$ethn4 <- reorder(my.treatment$ethn,my.treatment$married,FUN = length)
+summary(my.treatment$ethn4)
 
-ethn.new5 <- factor(ethn.new2["ethn"], levels= c("ethn2","ethn3","ethn1"))
-summary(ethn.new5)
+my.treatment$ethn5 <- factor(my.treatment$ethn2, levels= c("ethn2","ethn3","ethn1"))
+summary(my.treatment$ethn5)
+
+
 ```
-
 6. Missing values
   a. Do you have any missing values (NA) in your data?
   b. Are there any places where you *should* have missing values but they were read into R as some other value?

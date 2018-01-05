@@ -2,57 +2,48 @@
 # Use comments where you're having trouble or questions
 
 # 1. Read your data set into R
-read.table("treatment.csv", header=TRUE)
-my.df <- read.csv("treatment.csv", header=TRUE)
-my.df
+mydata <- read.csv("treatment.csv")
 
 
 # 2. Peek at the top few rows
-head(my.df)
+head(mydata)
 
 # 3. Peek at the top few rows for only a few columns
-head(my.df[1:5,1:3])
-head(my.df[,1:3])
+head(mydata[,1:3])
 
 
 # 4. How many rows does your data have?
-nrow(my.df)
+nrow(mydata) 
 
 # 5. Get a summary for every column
-summary(my.df) #these works now. I think it is the wrong command in 1.
-#I should use read.csv
+summary(mydata)
 
 # 6. Get a summary for one column
-summary(my.df$age)
-
+summary(mydata$ethn)
 
 # 7. Are any of the columns giving you unexpected values?
-
-
+# Nope!
 
 # 8. Select a few key columns, make a vector of the column names
-colnames(my.df)# this is a vector
-Key.columns <- colnames(my.df)[c(3,4,8,9)]#before column names, there should be c.
-#if you ask r to take somethings as a unit, then you use c to make it a unit.
-
+colnames(mydata)
+key.columns <- colnames(mydata)[c(2, 5, 8, 9)]
+key.columns
 
 # 9. Create a new data.frame with just that subset of columns
-my.new <- my.df[,Key.columns]
-my.new
+mydata1 <- mydata[, key.columns]
+mydata1
 
 # 10. Create a new data.frame that is just the first 10 rows
 #     and the last 10 rows of the data from the previous step
-
-#my.df[1:10,"educ"]
-#my.df[1:10,"re78"]
+mydata2 <- mydata1[c(1:10, 2416:2425),]
 
 
 
 # 11. Create a new data.frame that is a random sample of half of the rows.
 # HINT: ?sample
-?sample
-a <- c(my.df,1:1338)
-sample(a)
+sample.rows <- sample(x = nrow(mydata), size = nrow(mydata)/2) 
+sample.rows
+
 
 # 12. Find a comparison in your data that is interesting to make
 #     (comparing two sets of numbers)
@@ -62,9 +53,9 @@ sample(a)
 #     - run the t.test with BOTH the formula and "vector"
 #       formats, if possible
 #     - if one is NOT possible, say why you can't do it
-re75 <- my.df[1:2375,"re75"]
-re78 <- my.df[1:2375,"re78"]
-t.test(re75,re78)
+re78.black <- mydata$ethn
+my.ttest1 <- t.test(re75 ~ married ,data = mydata)
+my.ttest1
 
 
 # 13. Repeat #12 for TWO more comparisons
@@ -73,10 +64,13 @@ t.test(re75,re78)
 #       Pearson correlations)
 #     - Tip: it's okay if the comparisons are kind of nonsensical, this is 
 #       just a programming exercise
+my.cortest1 <- cor.test(mydata$re75, mydata$re78)
+my.cortest1
+my.cortest2 <- cor.test(mydata$educ,mydata$re78)
+my.cortest2
 
 # 14. Save all results from #12 and #13 in an .RData file
-my.results <- t.test(re75, re78)
-save(my.results, file="t-test results.RData")
+save(my.ttest1, my.cortest1, my.cortest2, file = "day02/homework_results.RData")
 
 # 15. Email me your version of this script, PLUS the .RData
 #     file from #14
